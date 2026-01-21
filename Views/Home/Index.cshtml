@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Founder's Desk — Landing";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body class="fd-bg">
+    <header class="fd-nav transparent">
+        <div class="fd-nav-inner">
+            <div class="fd-brand">Founder's Desk</div>
+            <nav class="fd-nav-links">
+                
+            </nav>
+        </div>
+    </header>
+
+    <main class="fd-landing">
+        <div class="fd-landing-inner">
+            <section class="fd-hero-left">
+                <div class="fd-overline">WELCOME TO FOUNDERS DESK</div>
+                <h1 class="fd-title">
+                    Turning Passion and<br />
+                    Purpose Into Real<br />
+                    Opportunities.
+                </h1>
+                <p class="fd-sub">
+                    Discover, learn, and grow with Founders Desk<br />
+                    a platform built to guide interns and partners toward<br />
+                    shared success.
+                </p>
+
+                <div class="fd-ctas">
+                    <button class="fd-btn primary" onclick="goToLogin('staff')">I am a Staff</button>
+                    <button class="fd-btn outline" onclick="goToLogin('intern')">I am an Intern</button>
+                </div>
+            </section>
+
+            <section class="fd-hero-right">
+                <div class="fd-hero-glow"></div>
+                <div class="fd-hero-card">
+                    <img src="~/images/hero.jpg" alt="Hero" class="fd-hero-img" />
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="~/js/site.js"></script>
+</body>
+</html>

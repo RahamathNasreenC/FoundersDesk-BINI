@@ -1,0 +1,62 @@
+﻿@model FoundersDesk.ViewModels.CompleteProfileViewModel
+@{
+    Layout = "_Layout";          // Use your default layout
+    ViewData["BodyClass"] = "auth-layout";  // This hides header and footer
+}
+<div style="
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+">
+
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg p-4 rounded" style="background: #1a1a1a; border: 1px solid #3eaecb; color: white;">
+                <h3 class="text-center mb-4" style="color: #3eaecb;">Complete Your Profile</h3>
+
+                <form asp-action="Complete" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input asp-for="FullName" class="form-control" placeholder="Enter your full name"
+                               style="background: #2d2d2d; border: 1px solid #444; color: white;" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input asp-for="Email" class="form-control" placeholder="Enter your email"
+                               style="background: #2d2d2d; border: 1px solid #444; color: white;" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Phone Number</label>
+                        <input asp-for="PhoneNumber" class="form-control" placeholder="Enter your phone number"
+                               style="background: #2d2d2d; border: 1px solid #444; color: white;" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                        
+
+
+                    <p class="text-muted small" style="font-style: italic;">
+                        * A professional profile avatar will be automatically generated for you.
+                    </p>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg"
+                                style="background: linear-gradient(135deg, #0099b8 0%, #2b1f62 100%); border: none;">
+                            Save & Access Dashboard
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

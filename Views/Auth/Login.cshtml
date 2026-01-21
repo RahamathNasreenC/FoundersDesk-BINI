@@ -1,0 +1,52 @@
+﻿@model FoundersDesk.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Login — Founder's Desk";
+    ViewData["BodyClass"] = "auth-layout";
+}
+
+    <main class="fd-auth-page">
+        <div class="fd-auth-card">
+            <div class="fd-auth-left">
+                <div class="fd-auth-art">
+                    <div class="fd-auth-art-text">Step into your space<br />for growth and<br />purpose.</div>
+                </div>
+            </div>
+
+            <div class="fd-auth-right">
+                <h2 id="loginHeading">@Model.Heading</h2>
+                <p class="muted" id="loginSub">@Model.SubText</p>
+
+                @if (!string.IsNullOrEmpty(ViewData.ModelState[""]?.Errors.FirstOrDefault()?.ErrorMessage))
+                {
+                    <div style="color: #ff4444; margin-bottom: 15px; padding: 10px; background: rgba(255,68,68,0.1); border-radius: 8px;">
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    </div>
+                }
+
+                <form asp-controller="Auth" asp-action="Login" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="Role" value="@Model.Role" />
+
+                    <label>Username</label>
+                    <input id="loginEmail" type="text" name="Username" placeholder="Enter your user name" required />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+
+                    <label>Password</label>
+                    <div class="fd-pass-row">
+                        <input id="loginPass" type="password" name="Password" placeholder="Enter your password" required />
+                        <button type="button" class="fd-icon-btn" onclick="togglePassword('loginPass')">👁</button>
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+
+                    <button type="submit" class="fd-btn primary fd-full">Login</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="~/js/site.js"></script>
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
