@@ -16,18 +16,20 @@ namespace FoundersDesk.Models
 
         [Required]
         [StringLength(50)]
-        public string Category { get; set; } // orientation, projects, culture, technical, etc.
+        public string Category { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string RoleType { get; set; } // general, technical, non-technical, vendor
+        public string RoleType { get; set; } // Staff / Intern
 
-        // 🔹 ONLY CHANGE: make VideoUrl nullable (no [Required])
+        [StringLength(100)]
+        public string? JobRole { get; set; } // Frontend, Backend, HR, etc
+
         [StringLength(255)]
-        public string? VideoUrl { get; set; }
+        public string? VideoUrl { get; set; }  // Local mp4 path or stream URL
 
         [StringLength(50)]
-        public string Icon { get; set; } // Emoji or icon class
+        public string Icon { get; set; }
 
         public bool IsActive { get; set; } = true;
 

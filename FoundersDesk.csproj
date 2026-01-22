@@ -20,6 +20,10 @@
   <ItemGroup>
     <Folder Include="wwwroot\docs\" />
     <Folder Include="wwwroot\uploads\" />
+    <Folder Include="wwwroot\videos\common\" />
+    <Folder Include="wwwroot\videos\frontend\" />
+    <Folder Include="wwwroot\videos\backend\" />
+    <Folder Include="wwwroot\videos\intern\" />
   </ItemGroup>
 
 </Project>

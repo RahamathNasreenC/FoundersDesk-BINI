@@ -81,7 +81,16 @@ namespace FoundersDesk.Controllers
                 .FirstOrDefault(s => s.Username == user.Username);
 
             // Get staff videos
-            var platformVideos = await _videoRepository.GetVideosByRoleAsync("staff");
+            var platformVideos = _context.Videos
+     .Where(v =>
+         v.IsActive &&
+         v.RoleType == user.Role.ToString() &&                    // Staff or Intern
+         (string.IsNullOrEmpty(v.JobRole) || v.JobRole == user.JobRole) // Common or matching JobRole
+     )
+     .OrderBy(v => v.DisplayOrder)
+     .ToList();
+
+
 
             var viewModel = new StaffDashboardViewModel
             {

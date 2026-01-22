@@ -576,11 +576,10 @@
         </section>
         <section class="learning-section" style="margin-bottom:60px;">
             <h2 class="section-title">
-                Welcome Kit
+                Company Policies
             </h2>
             <p class="section-description">
-                This Welcome Kit contains essential onboarding documents.
-                Please review and acknowledge each item to complete your onboarding process.
+                Please review and acknowledge the following company policy documents.
             </p>
 
             <div class="video-grid">
@@ -704,9 +703,9 @@
         </section>
 
         <section class="platform-section">
-            <h2 class="section-title">Know More About the Platform</h2>
+            <h2 class="section-title">Welcome Kit</h2>
             <p class="section-description">
-                Discover how to maximize your business potential with our comprehensive platform tools and resources designed specifically for vendors and business partners.
+                These videos are specially curated for your job role: <b>@Model.User.JobRole
             </p>
 
             <div class="video-grid">
@@ -752,12 +751,25 @@
     <script>
         function playVideo(videoUrl) {
             if (!videoUrl) {
-                alert("Video link not available.");
+                alert("Video not available.");
                 return;
             }
-            window.open(videoUrl, '_blank');
+
+            const video = document.getElementById("secureVideoPlayer");
+            video.src = videoUrl;
+            video.load();
+
+            document.getElementById("videoModal").style.display = "flex";
+        }
+
+        function closeVideoModal() {
+            const video = document.getElementById("secureVideoPlayer");
+            video.pause();
+            video.src = "";
+            document.getElementById("videoModal").style.display = "none";
         }
     </script>
+
 
     <script src="~/js/site.js"></script>
 
@@ -867,5 +879,36 @@
 
         </div>
     </div>
+    <!-- Secure Video Modal -->
+    <div id="videoModal" style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.85);
+    z-index:999999;
+    align-items:center;
+    justify-content:center;
+">
+        <div style="
+        width:80%;
+        max-width:900px;
+        background:#000;
+        border-radius:14px;
+        border:1px solid #3eaecb;
+        padding:15px;
+    ">
+            <video id="secureVideoPlayer"
+                   controls
+                   controlsList="nodownload noplaybackrate"
+                   disablePictureInPicture
+                   style="width:100%; border-radius:10px;">
+            </video>
+
+            <div style="text-align:right; margin-top:10px;">
+                <button class="video-btn" style="background:#444;" onclick="closeVideoModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
