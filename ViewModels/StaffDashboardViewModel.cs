@@ -7,7 +7,8 @@ namespace FoundersDesk.ViewModels
     public class StaffDashboardViewModel
     {
         public UserDto User { get; set; }
-        public List<VideoDto> PlatformVideos { get; set; }
+        public List<CourseViewModel> Courses { get; set; }
+
 
         // ===== Resources & Signature =====
         public List<string> AcknowledgedResources { get; set; } = new List<string>();

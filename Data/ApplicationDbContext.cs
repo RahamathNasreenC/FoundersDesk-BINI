@@ -17,6 +17,9 @@ namespace FoundersDesk.Data
         public DbSet<ResourceAcknowledgement> ResourceAcknowledgements { get; set; }
         public DbSet<DigitalSignature> DigitalSignatures { get; set; }
         public DbSet<Document> Documents { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<Module> Modules { get; set; }
+
 
 
 
@@ -55,8 +58,10 @@ namespace FoundersDesk.Data
                 entity.HasKey(e => e.VideoId);
             });
 
-            // ========================== VIDEO SEED ==========================
-         
+            modelBuilder.Entity<Course>().HasKey(c => c.CourseId);
+            modelBuilder.Entity<Module>().HasKey(m => m.ModuleId);
+
+
         }
     }
 }

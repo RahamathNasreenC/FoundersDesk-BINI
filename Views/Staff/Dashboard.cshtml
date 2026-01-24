@@ -708,18 +708,50 @@
                 These videos are specially curated for your job role: <b>@Model.User.JobRole
             </p>
 
-            <div class="video-grid">
-                @foreach (var video in Model.PlatformVideos)
-                {
-                    <div class="video-card">
-                        <div class="video-icon">@video.Icon</div>
-                        <h3>@video.Title</h3>
-                        <p>@video.Description</p>
-                        <button class="video-btn" onclick="playVideo('@video.VideoUrl')">Watch Video</button>
+            @foreach (var course in Model.Courses)
+            {
+                <div style="margin-bottom:50px;">
 
-                    </div>
-                }
-            </div>
+                    <h2 style="color:#3eaecb; margin-bottom:10px;">
+                        @course.Title
+                    </h2>
+
+                    <p style="color:#aaa; margin-bottom:25px;">
+                        @course.Description
+                    </p>
+
+                    @foreach (var module in course.Modules)
+                    {
+                        <div style="margin-bottom:35px; padding-left:10px; border-left:4px solid #3eaecb;">
+
+                            <h3 style="color:#47c6e7; margin-bottom:15px;">
+                                @module.Title
+                            </h3>
+
+                            <div style="display:flex; gap:20px; overflow-x:auto; padding-bottom:10px;">
+
+                                @foreach (var video in module.Videos)
+                                {
+                                    <div class="video-card" style="min-width:280px; max-width:280px; flex-shrink:0;">
+                                        <div class="video-icon">@video.Icon</div>
+                                        <h3 style="font-size:18px;">@video.Title</h3>
+                                        <p style="font-size:13px;">@video.Description</p>
+
+                                        <button class="video-btn" onclick="playVideo('@video.VideoUrl')">
+                                            ▶ Watch
+                                        </button>
+                                    </div>
+                                }
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+            }
+
+
 
             <div class="quick-links">
                 <a href="#" class="quick-link" onclick="alert('Feature coming soon!'); return false;">📋 Business Analytics</a>
@@ -898,6 +930,7 @@
         padding:15px;
     ">
             <video id="secureVideoPlayer"
+                   oncontextmenu="return false;"
                    controls
                    controlsList="nodownload noplaybackrate"
                    disablePictureInPicture

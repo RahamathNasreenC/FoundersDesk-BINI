@@ -35,7 +35,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    DbSeeder.SeedVideos(context); // only seeds if table is empty
+
+    DbSeeder.SeedCourses(context);   // ✅ new seeder
 }
 
 // Configure the HTTP request pipeline

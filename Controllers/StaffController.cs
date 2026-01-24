@@ -1,13 +1,14 @@
 ﻿using FoundersDesk.Data;
 using FoundersDesk.DTOs;
 using FoundersDesk.Interfaces;
+using FoundersDesk.Models;
 using FoundersDesk.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using FoundersDesk.Models;
-using System;
 
 
 namespace FoundersDesk.Controllers
@@ -81,14 +82,17 @@ namespace FoundersDesk.Controllers
                 .FirstOrDefault(s => s.Username == user.Username);
 
             // Get staff videos
-            var platformVideos = _context.Videos
-     .Where(v =>
-         v.IsActive &&
-         v.RoleType == user.Role.ToString() &&                    // Staff or Intern
-         (string.IsNullOrEmpty(v.JobRole) || v.JobRole == user.JobRole) // Common or matching JobRole
-     )
-     .OrderBy(v => v.DisplayOrder)
-     .ToList();
+            var courses = _context.Courses
+    .Include(c => c.Modules)
+        .ThenInclude(m => m.Videos)
+    .Where(c =>
+        c.IsActive &&
+        c.RoleType == user.Role.ToString() &&
+        (string.IsNullOrEmpty(c.JobRole) || c.JobRole == user.JobRole)
+    )
+    .OrderBy(c => c.DisplayOrder)
+    .ToList();
+
 
 
 
@@ -111,7 +115,20 @@ namespace FoundersDesk.Controllers
                 IsSignatureUploaded = signature != null,
                 SignatureUploadedAt = signature?.UploadedAt,
 
-                PlatformVideos = platformVideos.Select(v => new VideoDto
+                Courses = courses.Select(c => new CourseViewModel
+                {
+                    CourseId = c.CourseId,
+                    Title = c.Title,
+                    Description = c.Description,
+                    Modules = c.Modules
+        .OrderBy(m => m.DisplayOrder)
+        .Select(m => new ModuleViewModel
+        {
+            ModuleId = m.ModuleId,
+            Title = m.Title,
+            Videos = m.Videos
+                .OrderBy(v => v.DisplayOrder)
+                .Select(v => new VideoDto
                 {
                     VideoId = v.VideoId,
                     Title = v.Title,
@@ -121,6 +138,9 @@ namespace FoundersDesk.Controllers
                     VideoUrl = v.VideoUrl,
                     Icon = v.Icon
                 }).ToList()
+        }).ToList()
+                }).ToList()
+
             };
 
 
