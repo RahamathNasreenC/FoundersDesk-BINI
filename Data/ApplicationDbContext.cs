@@ -19,6 +19,8 @@ namespace FoundersDesk.Data
         public DbSet<Document> Documents { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Module> Modules { get; set; }
+        public DbSet<TrainingResource> TrainingResources { get; set; }
+
 
 
 

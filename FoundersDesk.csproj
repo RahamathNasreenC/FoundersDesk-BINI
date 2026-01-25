@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\docs\" />
-    <Folder Include="wwwroot\uploads\" />
+    <Folder Include="wwwroot\uploads\training-resources\" />
     <Folder Include="wwwroot\videos\common\" />
     <Folder Include="wwwroot\videos\frontend\" />
     <Folder Include="wwwroot\videos\backend\" />

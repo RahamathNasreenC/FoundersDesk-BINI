@@ -213,5 +213,48 @@ namespace FoundersDesk.Data
 
             context.SaveChanges();
         }
+        public static void SeedTrainingResources(ApplicationDbContext context)
+        {
+            if (context.TrainingResources.Any()) return;
+
+            var resources = new List<TrainingResource>
+    {
+        // =========================
+        // GENERIC – STAFF (ALL ROLES)
+        // =========================
+        new TrainingResource
+        {
+            Title = "Company Overview",
+            Description = "Introduction to Founders Desk",
+            FileUrl = "/uploads/training-resources/company-overview.pptx",
+            RoleType = "Staff",
+            JobRole = null,          // visible to all roles
+            IsGeneric = true,
+            DisplayOrder = 1,
+            IsActive = true
+        },
+
+        // =========================
+        // FRONTEND – STAFF ONLY
+        // =========================
+        new TrainingResource
+        {
+            Title = "Frontend Basics",
+            Description = "Frontend standards and workflow",
+            FileUrl = "/uploads/training-resources/frontend-basics.pptx",
+            RoleType = "Staff",
+            JobRole = "Frontend",
+            IsGeneric = false,
+            DisplayOrder = 2,
+            IsActive = true
+        }
+    };
+
+            context.TrainingResources.AddRange(resources);
+            context.SaveChanges();
+        }
+
+
+
     }
 }

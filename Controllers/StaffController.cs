@@ -95,6 +95,26 @@ namespace FoundersDesk.Controllers
 
 
 
+            var trainingResources = _context.TrainingResources
+    .Where(tr =>
+        tr.IsActive &&
+        tr.RoleType == user.Role.ToString() &&
+        (
+            tr.IsGeneric ||
+            tr.JobRole == user.JobRole
+        )
+    )
+    .OrderBy(tr => tr.DisplayOrder)
+    .Select(tr => new TrainingResourceViewModel
+    {
+        TrainingResourceId = tr.TrainingResourceId,
+        Title = tr.Title,
+        Description = tr.Description,
+        FileUrl = tr.FileUrl
+    })
+    .ToList();
+
+
 
             var viewModel = new StaffDashboardViewModel
             {
@@ -110,7 +130,6 @@ namespace FoundersDesk.Controllers
                     Role = user.Role.ToString()
                 },
 
-                // ✅ THIS IS THE MISSING PART
                 AcknowledgedResources = validAcknowledgements,
                 IsSignatureUploaded = signature != null,
                 SignatureUploadedAt = signature?.UploadedAt,
@@ -121,30 +140,33 @@ namespace FoundersDesk.Controllers
                     Title = c.Title,
                     Description = c.Description,
                     Modules = c.Modules
-        .OrderBy(m => m.DisplayOrder)
-        .Select(m => new ModuleViewModel
-        {
-            ModuleId = m.ModuleId,
-            Title = m.Title,
-            Videos = m.Videos
-                .OrderBy(v => v.DisplayOrder)
-                .Select(v => new VideoDto
-                {
-                    VideoId = v.VideoId,
-                    Title = v.Title,
-                    Description = v.Description,
-                    Category = v.Category,
-                    RoleType = v.RoleType,
-                    VideoUrl = v.VideoUrl,
-                    Icon = v.Icon
-                }).ToList()
-        }).ToList()
-                }).ToList()
+                        .OrderBy(m => m.DisplayOrder)
+                        .Select(m => new ModuleViewModel
+                        {
+                            ModuleId = m.ModuleId,
+                            Title = m.Title,
+                            Videos = m.Videos
+                                .OrderBy(v => v.DisplayOrder)
+                                .Select(v => new VideoDto
+                                {
+                                    VideoId = v.VideoId,
+                                    Title = v.Title,
+                                    Description = v.Description,
+                                    Category = v.Category,
+                                    RoleType = v.RoleType,
+                                    VideoUrl = v.VideoUrl,
+                                    Icon = v.Icon
+                                }).ToList()
+                        }).ToList()
+                }).ToList(),
 
+                // ✅ THIS WAS MISSING
+                TrainingResources = trainingResources
             };
 
-
             return View(viewModel);
+
+
         }
     }
 }

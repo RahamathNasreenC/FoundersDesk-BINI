@@ -811,10 +811,39 @@
                 }
             </div>
         </section>
+        @if (Model.TrainingResources != null && Model.TrainingResources.Any())
+        {
+            <section class="platform-section" style="margin-top:60px;">
+                <h2 class="section-title">Training Resources</h2>
+                <p class="section-description">
+                    Downloadable documents & PPTs for your role
+                </p>
+
+                <div class="video-grid">
+                    @foreach (var res in Model.TrainingResources)
+                    {
+                        <div class="video-card">
+                            <div class="video-icon">📑</div>
+
+                            <h3>@res.Title</h3>
+                            <p>@res.Description</p>
+
+                            <a href="@res.FileUrl"
+                               target="_blank"
+                               class="video-btn"
+                               style="text-decoration:none; display:inline-block;">
+                                📥 View / Download
+                            </a>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
 
 
-            <!-- ================= VIDEO LEARNING LAYOUT ================= -->
-            <!-- ✅ MUST BE OUTSIDE LOOP -->
+
+
+            
             
 
       

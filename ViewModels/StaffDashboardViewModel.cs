@@ -14,5 +14,7 @@ namespace FoundersDesk.ViewModels
         public List<string> AcknowledgedResources { get; set; } = new List<string>();
         public bool IsSignatureUploaded { get; set; }
         public DateTime? SignatureUploadedAt { get; set; }
+        public List<TrainingResourceViewModel> TrainingResources { get; set; }
+
     }
 }
