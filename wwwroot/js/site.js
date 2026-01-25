@@ -2,6 +2,8 @@
  * goToLogin(role)
  * Redirects to the login page with role parameter
  */
+"use strict";
+
 function goToLogin(role) {
     if (!role) role = 'intern';
     window.location.href = '/Auth/Login?role=' + encodeURIComponent(role);
@@ -50,13 +52,7 @@ function showCategory(category, button) {
 /**
  * playVideo(videoUrl)
  */
-function playVideo(videoUrl) {
-    if (!videoUrl) {
-        alert("Video link not available.");
-        return;
-    }
-    window.open(videoUrl, '_blank');
-}
+
 
 /**
  * toggleProfileModal()
@@ -208,4 +204,33 @@ function submitSignature() {
             alert("Server error: " + err);
         });
 }
+function openLearningPlayer(url, title, desc) {
+    if (!url) {
+        alert("Video not available");
+        return;
+    }
+
+    const section = document.getElementById("learningPlayerSection");
+
+    // Use class toggle instead of inline style
+    section.classList.remove("hidden");
+
+    // Scroll to player
+    section.scrollIntoView({ behavior: "smooth" });
+
+    const player = document.getElementById("mainVideoPlayer");
+    player.src = url;
+    player.load();
+
+    document.getElementById("playerTitle").innerText = title;
+    document.getElementById("playerDesc").innerText = desc;
+}
+function openCourse(courseId) {
+    window.location.href = '/Learning/Course/' + courseId;
+}
+
+
+
+
+
 

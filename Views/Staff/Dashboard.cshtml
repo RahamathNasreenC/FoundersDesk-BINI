@@ -79,6 +79,7 @@
 
         .main-container {
             max-width: 1400px;
+            width: 100%;
             margin: 0 auto;
             padding: 40px 20px;
         }
@@ -436,6 +437,91 @@
                 width: 100%;
             }
 
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+        }
+        /* ================= VIDEO LEARNING PLAYER (Skillnation-like) ================= */
+
+        .learning-player {
+            margin-top: 60px;
+        }
+
+            .learning-player.hidden {
+                display: none;
+            }
+
+        .player-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 30px;
+        }
+
+        /* LEFT PLAYLIST */
+        .playlist {
+            background: #111;
+            border-radius: 14px;
+            padding: 20px;
+            height: 75vh;
+            overflow-y: auto;
+            border: 1px solid #333;
+        }
+
+        /* Playlist items (we will inject later via JS) */
+        .playlist-item {
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            background: #1a1a1a;
+            border: 1px solid #222;
+            transition: 0.2s;
+            font-size: 14px;
+            color: #ccc;
+        }
+
+            .playlist-item:hover {
+                background: #222;
+                border-color: #3eaecb;
+            }
+
+            .playlist-item.active {
+                background: linear-gradient(135deg, #3eaecb, #2b1f62);
+                color: white;
+                font-weight: 600;
+            }
+
+        /* RIGHT PLAYER */
+        .player-area {
+            background: #000;
+            border-radius: 14px;
+            padding: 20px;
+            border: 1px solid #3eaecb;
+            display: flex;
+            flex-direction: column;
+        }
+
+            .player-area h3 {
+                color: #3eaecb;
+                margin-bottom: 10px;
+            }
+
+            .player-area p {
+                color: #aaa;
+                font-size: 14px;
+            }
+
+        #mainVideoPlayer {
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 10px;
+            flex: 1;
+            background: black;
+        }
+
+
+
+
     </style>
 </head>
 <body>
@@ -705,51 +791,35 @@
         <section class="platform-section">
             <h2 class="section-title">Welcome Kit</h2>
             <p class="section-description">
-                These videos are specially curated for your job role: <b>@Model.User.JobRole
+                These videos are specially curated for your job role: <b>@Model.User.JobRole</b>
             </p>
 
-            @foreach (var course in Model.Courses)
-            {
-                <div style="margin-bottom:50px;">
+            <div class="video-grid">
+                @foreach (var course in Model.Courses)
+                {
+                    <div class="video-card">
+                        <div class="video-icon">🎓</div>
 
-                    <h2 style="color:#3eaecb; margin-bottom:10px;">
-                        @course.Title
-                    </h2>
+                        <h3>@course.Title</h3>
+                        <p>@course.Description</p>
 
-                    <p style="color:#aaa; margin-bottom:25px;">
-                        @course.Description
-                    </p>
+                        <button class="video-btn"
+                                onclick="openCourse(@course.CourseId)">
+                            ▶ Start Learning
+                        </button>
+                    </div>
+                }
+            </div>
+        </section>
 
-                    @foreach (var module in course.Modules)
-                    {
-                        <div style="margin-bottom:35px; padding-left:10px; border-left:4px solid #3eaecb;">
 
-                            <h3 style="color:#47c6e7; margin-bottom:15px;">
-                                @module.Title
-                            </h3>
+            <!-- ================= VIDEO LEARNING LAYOUT ================= -->
+            <!-- ✅ MUST BE OUTSIDE LOOP -->
+            
 
-                            <div style="display:flex; gap:20px; overflow-x:auto; padding-bottom:10px;">
+      
 
-                                @foreach (var video in module.Videos)
-                                {
-                                    <div class="video-card" style="min-width:280px; max-width:280px; flex-shrink:0;">
-                                        <div class="video-icon">@video.Icon</div>
-                                        <h3 style="font-size:18px;">@video.Title</h3>
-                                        <p style="font-size:13px;">@video.Description</p>
-
-                                        <button class="video-btn" onclick="playVideo('@video.VideoUrl')">
-                                            ▶ Watch
-                                        </button>
-                                    </div>
-                                }
-
-                            </div>
-
-                        </div>
-                    }
-
-                </div>
-            }
+        
 
 
 
@@ -777,33 +847,15 @@
                     </div>
                 </div>
             </div>
-        </section>
+        
+
     </main>
 
-    <script>
-        function playVideo(videoUrl) {
-            if (!videoUrl) {
-                alert("Video not available.");
-                return;
-            }
-
-            const video = document.getElementById("secureVideoPlayer");
-            video.src = videoUrl;
-            video.load();
-
-            document.getElementById("videoModal").style.display = "flex";
-        }
-
-        function closeVideoModal() {
-            const video = document.getElementById("secureVideoPlayer");
-            video.pause();
-            video.src = "";
-            document.getElementById("videoModal").style.display = "none";
-        }
-    </script>
+    
 
 
-    <script src="~/js/site.js"></script>
+    <script src="~/js/site.js?v=@DateTime.Now.Ticks"></script>
+
 
     <!-- Resource Modal -->
     <div id="resourceModal" style="
@@ -911,37 +963,7 @@
 
         </div>
     </div>
-    <!-- Secure Video Modal -->
-    <div id="videoModal" style="
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.85);
-    z-index:999999;
-    align-items:center;
-    justify-content:center;
-">
-        <div style="
-        width:80%;
-        max-width:900px;
-        background:#000;
-        border-radius:14px;
-        border:1px solid #3eaecb;
-        padding:15px;
-    ">
-            <video id="secureVideoPlayer"
-                   oncontextmenu="return false;"
-                   controls
-                   controlsList="nodownload noplaybackrate"
-                   disablePictureInPicture
-                   style="width:100%; border-radius:10px;">
-            </video>
-
-            <div style="text-align:right; margin-top:10px;">
-                <button class="video-btn" style="background:#444;" onclick="closeVideoModal()">Close</button>
-            </div>
-        </div>
-    </div>
+    
 
 </body>
 </html>

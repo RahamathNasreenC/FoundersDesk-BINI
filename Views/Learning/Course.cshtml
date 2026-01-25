@@ -1,0 +1,135 @@
+﻿@model FoundersDesk.Models.Course
+
+<style>
+    body {
+        margin: 0;
+        background: #0e0e0e;
+        color: white;
+        font-family: Manrope, sans-serif;
+    }
+
+    .player-layout {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 20px;
+        padding: 25px;
+        height: 100vh;
+    }
+
+    /* LEFT */
+    .playlist {
+        background: #111;
+        border-radius: 14px;
+        padding: 15px;
+        overflow-y: auto;
+        border: 1px solid #333;
+    }
+
+    .module-title {
+        color: #3eaecb;
+        margin: 15px 0 10px;
+        font-weight: 700;
+    }
+
+    .playlist-item {
+        padding: 10px 12px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        background: #1a1a1a;
+        border: 1px solid #222;
+        transition: 0.2s;
+        font-size: 14px;
+        color: #ccc;
+    }
+
+        .playlist-item:hover {
+            background: #222;
+            border-color: #3eaecb;
+        }
+
+        .playlist-item.active {
+            background: linear-gradient(135deg, #3eaecb, #2b1f62);
+            color: white;
+            font-weight: 600;
+        }
+
+    /* RIGHT */
+    .player-area {
+        background: #000;
+        border-radius: 14px;
+        padding: 20px;
+        border: 1px solid #3eaecb;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .player-area h2 {
+            color: #3eaecb;
+            margin-bottom: 8px;
+        }
+
+        .player-area p {
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+    #mainVideoPlayer {
+        width: 100%;
+        flex: 1;
+        border-radius: 12px;
+        background: black;
+    }
+</style>
+
+<div class="player-layout">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="playlist">
+
+        <h3 style="color:#3eaecb;">@Model.Title</h3>
+        <p style="color:#888; font-size:13px;">@Model.Description</p>
+
+        <hr style="border-color:#222; margin:15px 0;" />
+
+        @foreach (var module in Model.Modules)
+        {
+            <div class="module-title">@module.Title</div>
+
+            @foreach (var video in module.Videos)
+            {
+                <div class="playlist-item"
+                     onclick="playVideo('@video.VideoUrl','@video.Title','@video.Description', this)">
+                    ▶ @video.Title
+                </div>
+            }
+        }
+
+    </div>
+
+    <!-- RIGHT PLAYER -->
+    <div class="player-area">
+        <h2 id="playerTitle">Select a video</h2>
+        <p id="playerDesc"></p>
+
+        <video id="mainVideoPlayer" controls></video>
+    </div>
+
+</div>
+
+<script>
+    function playVideo(url, title, desc, el) {
+
+        document.querySelectorAll('.playlist-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+
+        document.getElementById('playerTitle').innerText = title;
+        document.getElementById('playerDesc').innerText = desc;
+
+        const player = document.getElementById('mainVideoPlayer');
+        player.src = url;
+        player.load();
+        player.play();
+    }
+</script>
