@@ -816,24 +816,25 @@
             <section class="platform-section" style="margin-top:60px;">
                 <h2 class="section-title">Training Resources</h2>
                 <p class="section-description">
-                    Downloadable documents & PPTs for your role
+                    Interactive web-based training curated for your role
                 </p>
 
                 <div class="video-grid">
                     @foreach (var res in Model.TrainingResources)
                     {
                         <div class="video-card">
-                            <div class="video-icon">📑</div>
+                            <div class="video-icon">📘</div>
+
 
                             <h3>@res.Title</h3>
                             <p>@res.Description</p>
 
-                            <a href="@res.FileUrl"
-                               target="_blank"
+                            <a href="@Url.Action("Index", "Training", new { pageKey = res.PageKey })"
                                class="video-btn"
                                style="text-decoration:none; display:inline-block;">
-                                📥 View / Download
+                                📖 Open Training
                             </a>
+
                         </div>
                     }
                 </div>

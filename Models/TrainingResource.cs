@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FoundersDesk.Models
 {
@@ -14,9 +13,9 @@ namespace FoundersDesk.Models
 
         public string Description { get; set; }
 
-        // PPT file path
+        // Which training page to open (web based)
         [Required]
-        public string FileUrl { get; set; }
+        public string PageKey { get; set; }   // ex: "frontend-basics"
 
         // Staff / Intern
         [Required]
@@ -26,7 +25,7 @@ namespace FoundersDesk.Models
         // NULL = visible to all job roles
         public string? JobRole { get; set; }
 
-        // Generic PPT or role-specific
+        // Generic or role-specific training
         public bool IsGeneric { get; set; }
 
         public bool IsActive { get; set; } = true;
@@ -34,7 +33,5 @@ namespace FoundersDesk.Models
         public int DisplayOrder { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        
-
     }
 }

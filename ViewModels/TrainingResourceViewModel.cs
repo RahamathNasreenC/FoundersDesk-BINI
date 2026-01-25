@@ -8,7 +8,8 @@
 
         public string Description { get; set; }
 
-        public string FileUrl { get; set; }
+        public string PageKey { get; set; }
+
 
     }
 }

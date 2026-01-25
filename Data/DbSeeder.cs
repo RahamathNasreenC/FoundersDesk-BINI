@@ -226,7 +226,7 @@ namespace FoundersDesk.Data
         {
             Title = "Company Overview",
             Description = "Introduction to Founders Desk",
-            FileUrl = "/uploads/training-resources/company-overview.pptx",
+            PageKey = "company-overview",   // 🔥 opens web page
             RoleType = "Staff",
             JobRole = null,          // visible to all roles
             IsGeneric = true,
@@ -241,7 +241,7 @@ namespace FoundersDesk.Data
         {
             Title = "Frontend Basics",
             Description = "Frontend standards and workflow",
-            FileUrl = "/uploads/training-resources/frontend-basics.pptx",
+            PageKey = "frontend-basics",    // 🔥 opens web page
             RoleType = "Staff",
             JobRole = "Frontend",
             IsGeneric = false,
@@ -253,6 +253,7 @@ namespace FoundersDesk.Data
             context.TrainingResources.AddRange(resources);
             context.SaveChanges();
         }
+
 
 
 

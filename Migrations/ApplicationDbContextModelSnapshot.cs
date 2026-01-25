@@ -205,10 +205,6 @@ namespace FoundersDesk.Migrations
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
 
-                    b.Property<string>("FileUrl")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
@@ -216,6 +212,10 @@ namespace FoundersDesk.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("JobRole")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PageKey")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("RoleType")

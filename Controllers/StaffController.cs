@@ -110,9 +110,10 @@ namespace FoundersDesk.Controllers
         TrainingResourceId = tr.TrainingResourceId,
         Title = tr.Title,
         Description = tr.Description,
-        FileUrl = tr.FileUrl
+        PageKey = tr.PageKey   // ✅ opens training page
     })
-    .ToList();
+.ToList();
+
 
 
 

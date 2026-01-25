@@ -1,0 +1,99 @@
+﻿@model FoundersDesk.ViewModels.TrainingPageViewModel
+@{
+    ViewData["Title"] = Model.Title;
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@Model.Title</title>
+    <style>
+        body {
+            background: #0e0e0e;
+            color: white;
+            font-family: Manrope, sans-serif;
+            padding: 60px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #3eaecb;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #ccc;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+        }
+
+        .btn {
+            padding: 12px 26px;
+            border-radius: 25px;
+            background: linear-gradient(135deg,#3eaecb,#2b1f62);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+            .btn.disabled {
+                opacity: 0.4;
+                pointer-events: none;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>🏢 Company Overview</h1>
+
+        <p>
+            Founder's Desk is a growth-driven ecosystem built to connect talent,
+            startups, and enterprises through structured onboarding, learning,
+            and collaboration.
+        </p>
+
+        <p>
+            Our mission is to eliminate onboarding chaos by providing role-based
+            learning paths, professional mentorship, and real-world exposure.
+        </p>
+
+        <p>
+            Every training module you see here is curated to help you
+            succeed faster, align with company standards, and grow confidently
+            in your role.
+        </p>
+
+        <hr style="margin:40px 0; border-color:#333;">
+
+        <div class="nav">
+            <span></span>
+
+            @if (Model.NextPageKey != null)
+            {
+                <a href="/Training?pageKey=@Model.NextPageKey" class="btn">
+                    Next ➡
+                </a>
+            }
+            else
+            {
+                <a class="btn disabled">Next ➡</a>
+            }
+        </div>
+
+    </div>
+
+</body>
+</html>

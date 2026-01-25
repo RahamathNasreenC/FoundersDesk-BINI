@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoundersDesk.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260125094945_AddTrainingResources")]
-    partial class AddTrainingResources
+    [Migration("20260125173416_CreateTrainingResources")]
+    partial class CreateTrainingResources
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -208,10 +208,6 @@ namespace FoundersDesk.Migrations
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
 
-                    b.Property<string>("FileUrl")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
@@ -219,6 +215,10 @@ namespace FoundersDesk.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("JobRole")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PageKey")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("RoleType")
