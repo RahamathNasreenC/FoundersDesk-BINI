@@ -1,120 +1,44 @@
-﻿@model FoundersDesk.ViewModels.TrainingPageViewModel
-@{
-    ViewData["Title"] = Model.Title;
-    Layout = null;
+﻿@{
+    Layout = "_TrainingLayout";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>@Model.Title</title>
-    <style>
-        body {
-            background: #0e0e0e;
-            color: white;
-            font-family: Manrope, sans-serif;
-            padding: 60px;
-        }
+<div class="training-title">
+    <i class="bi bi-code-slash text-success"></i>
+    Frontend Basics
+</div>
 
-        .container {
-            max-width: 900px;
-            margin: auto;
-        }
+<p class="training-subtitle">
+    This section introduces the foundational frontend concepts used in Founders Desk.
+</p>
 
-        h1 {
-            color: #3eaecb;
-            margin-bottom: 20px;
-        }
+<div class="mb-4">
+    <div class="section-title">Core Technologies</div>
+    <ul class="training-list">
+        <li>HTML – Structure of the page</li>
+        <li>CSS – Styling and layouts</li>
+        <li>Bootstrap – Responsive UI framework</li>
+    </ul>
+</div>
 
-        ul {
-            margin-top: 20px;
-            color: #ccc;
-            line-height: 1.8;
-        }
+<div class="mb-2">
+    <div class="section-title">UI Expectations</div>
+    <ul class="training-list">
+        <li>Clean & accessible layouts</li>
+        <li>Mobile-friendly design</li>
+        <li>Consistent spacing and typography</li>
+    </ul>
+</div>
 
-        li {
-            margin-bottom: 10px;
-        }
+<div class="training-nav">
+    <a asp-controller="Training"
+       asp-action="Index"
+       asp-route-pageKey="company-overview"
+       class="btn btn-outline-secondary btn-nav">
+        <i class="bi bi-arrow-left"></i> Previous
+    </a>
 
-        .highlight {
-            background: #111;
-            border-left: 4px solid #3eaecb;
-            padding: 20px;
-            margin: 30px 0;
-            border-radius: 10px;
-        }
-
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 50px;
-        }
-
-        .btn {
-            padding: 12px 26px;
-            border-radius: 25px;
-            background: linear-gradient(135deg,#3eaecb,#2b1f62);
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-
-        <h1>🎨 Frontend Basics</h1>
-
-        <p>
-            This module introduces the frontend development standards followed
-            at Founder's Desk.
-        </p>
-
-        <div class="highlight">
-            <strong>Core Stack:</strong>
-            <ul>
-                <li>HTML5 + Semantic Structure</li>
-                <li>CSS / Tailwind / Responsive UI</li>
-                <li>JavaScript fundamentals</li>
-                <li>ASP.NET Razor Views</li>
-            </ul>
-        </div>
-
-        <p>
-            Maintain clean folder structures, reusable components,
-            and follow design consistency across the application.
-        </p>
-
-        <div class="highlight">
-            <strong>Best Practices:</strong>
-            <ul>
-                <li>Component-based thinking</li>
-                <li>Reusable CSS classes</li>
-                <li>Accessibility awareness</li>
-                <li>Performance optimization</li>
-            </ul>
-        </div>
-
-        <hr style="margin:40px 0; border-color:#333;">
-
-        <div class="nav">
-            @if (Model.PreviousPageKey != null)
-            {
-                <a href="/Training?pageKey=@Model.PreviousPageKey" class="btn">
-                    ⬅ Previous
-                </a>
-            }
-
-            @if (Model.NextPageKey != null)
-            {
-                <a href="/Training?pageKey=@Model.NextPageKey" class="btn">
-                    Next ➡
-                </a>
-            }
-        </div>
-
-    </div>
-
-</body>
-</html>
+    </a>
+    <a href="#" class="btn btn-success btn-nav">
+        Finish
+    </a>
+</div>

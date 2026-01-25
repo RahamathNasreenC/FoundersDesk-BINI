@@ -19,29 +19,29 @@ namespace FoundersDesk.Controllers
             if (string.IsNullOrWhiteSpace(pageKey))
                 return NotFound();
 
-            var resource = _context.TrainingResources
+            var resources = _context.TrainingResources
                 .Where(r => r.IsActive)
                 .OrderBy(r => r.DisplayOrder)
                 .ToList();
 
-            var currentIndex = resource.FindIndex(r => r.PageKey == pageKey);
+            var currentIndex = resources.FindIndex(r => r.PageKey == pageKey);
 
             if (currentIndex == -1)
                 return NotFound();
 
             var model = new TrainingPageViewModel
             {
-                Title = resource[currentIndex].Title,
+                Title = resources[currentIndex].Title,
                 PageKey = pageKey,
                 PreviousPageKey = currentIndex > 0
-                    ? resource[currentIndex - 1].PageKey
+                    ? resources[currentIndex - 1].PageKey
                     : null,
-                NextPageKey = currentIndex < resource.Count - 1
-                    ? resource[currentIndex + 1].PageKey
+                NextPageKey = currentIndex < resources.Count - 1
+                    ? resources[currentIndex + 1].PageKey
                     : null
             };
 
-            return View(pageKey, model);
+            return View($"~/Views/Training/{pageKey}.cshtml", model);
         }
     }
 }
