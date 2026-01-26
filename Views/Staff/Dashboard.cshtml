@@ -660,133 +660,9 @@
                 </div>
             </div>
         </section>
-        <section class="learning-section" style="margin-bottom:60px;">
-            <h2 class="section-title">
-                Company Policies
-            </h2>
-            <p class="section-description">
-                Please review and acknowledge the following company policy documents.
-            </p>
-
-            <div class="video-grid">
-
-                <!-- TERMS -->
-                @{
-                    bool termsDone = Model.AcknowledgedResources.Contains("terms");
-                }
-                <div class="video-card @(termsDone ? "resource-completed" : "resource-pending")">
-                    <div class="video-icon">📄</div>
-                    <h3>
-                        Terms & Conditions
-                        @if (!termsDone)
-                        {
-                            <span class="pending-badge">Pending</span>
-                        }
-                        else
-                        {
-                            <span class="completed-badge">Completed</span>
-                        }
-                    </h3>
-                    <p>Understand the rules, responsibilities, and expectations during your internship.</p>
-                    <button class="video-btn" onclick="openResource('terms')">View Document</button>
-                </div>
-
-                <!-- PRIVACY -->
-                @{
-                    bool privacyDone = Model.AcknowledgedResources.Contains("privacy");
-                }
-                <div class="video-card @(privacyDone ? "resource-completed" : "resource-pending")">
-                    <div class="video-icon">🔒</div>
-                    <h3>
-                        Privacy Policy
-                        @if (!privacyDone)
-                        {
-                            <span class="pending-badge">Pending</span>
-                        }
-                        else
-                        {
-                            <span class="completed-badge">Completed</span>
-                        }
-                    </h3>
-                    <p>Learn how your personal data is handled and protected by Founder's Desk.</p>
-                    <button class="video-btn" onclick="openResource('privacy')">View Document</button>
-                </div>
-
-                <!-- CONDUCT -->
-                @{
-                    bool conductDone = Model.AcknowledgedResources.Contains("conduct");
-                }
-                <div class="video-card @(conductDone ? "resource-completed" : "resource-pending")">
-                    <div class="video-icon">🤝</div>
-                    <h3>
-                        Code of Conduct
-                        @if (!conductDone)
-                        {
-                            <span class="pending-badge">Pending</span>
-                        }
-                        else
-                        {
-                            <span class="completed-badge">Completed</span>
-                        }
-                    </h3>
-                    <p>Guidelines to maintain professionalism, ethics, and mutual respect.</p>
-                    <button class="video-btn" onclick="openResource('conduct')">View Document</button>
-                </div>
-                @{
-                    TimeZoneInfo istZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
-                    DateTime? signatureIST = Model.SignatureUploadedAt.HasValue
-                    ? TimeZoneInfo.ConvertTimeFromUtc(Model.SignatureUploadedAt.Value, istZone)
-                    : (DateTime?)null;
-                }
-
-                <!-- SIGNATURE -->
-                @{
-                    bool signatureDone = Model.IsSignatureUploaded;
-                }
-                <div class="signature-row">
-                    <div class="video-card @(signatureDone ? "resource-completed" : "resource-pending")">
-
-                        <div class="video-icon">✍️</div>
-
-                        <h3>
-                            Digital Signature
-                            @if (!signatureDone)
-                            {
-                                <span class="pending-badge">Pending</span>
-                            }
-                            else
-                            {
-                                <span class="completed-badge">Completed</span>
-                            }
-                        </h3>
-
-                        <p>
-                            @if (!signatureDone)
-                            {
-                                <span>Please upload your digital signature.</span>
-                            }
-                            else
-                            {
-                                <span>
-                                    Uploaded on @signatureIST?.ToString("dd MMM yyyy, hh:mm tt")
-                                </span>
-                            }
-                        </p>
-
-                        <button class="video-btn"
-                                onclick="openSignatureModal()"
-                                @(signatureDone ? "disabled style='opacity:0.6;cursor:not-allowed;'" : "")>
-                            Upload Signature
-                        </button>
-
-                    </div>
-                </div>
+        
 
 
-
-            </div>
-
-        </section>
 
         <section class="platform-section">
             <h2 class="section-title">Welcome Kit</h2>
@@ -840,6 +716,105 @@
                 </div>
             </section>
         }
+        <!-- Section Header -->
+        <section class="platform-section" style="margin-top:60px;">
+            <h2 class="section-title">Company Policies</h2>
+            <p class="section-description">
+                Please review and acknowledge the following company policy documents.
+            </p>
+
+            <div class="video-grid">
+
+
+            @* ===== POLICY DOCUMENTS ===== *@
+            @if (Model.CompanyPolicies?.Documents != null && Model.CompanyPolicies.Documents.Any())
+            {
+                foreach (var doc in Model.CompanyPolicies.Documents)
+                {
+                    <div class="video-card @(doc.IsAcknowledged ? "resource-completed" : "resource-pending")">
+
+                        <div class="video-icon">📄</div>
+
+                        <h3>
+                            @doc.Title
+                            @if (!doc.IsAcknowledged)
+                            {
+                                <span class="pending-badge">Pending</span>
+                            }
+                            else
+                            {
+                                <span class="completed-badge">Completed</span>
+                            }
+                        </h3>
+
+                        <p>Please review and acknowledge this document.</p>
+
+                        <!-- ✅ SAFE BUTTON (NO INLINE RAZOR IN JS) -->
+                        <button class="video-btn"
+                                data-id="@doc.DocumentId"
+                                data-title="@doc.Title"
+                                data-path="@doc.FilePath"
+                                onclick="openResourceFromBtn(this)">
+                            View Document
+                        </button>
+
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="empty-state">No company policy documents assigned.</p>
+            }
+
+            @* ===== SIGNATURE CARD ===== *@
+            @{
+                TimeZoneInfo istZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+                DateTime? signatureIST = Model.SignatureUploadedAt.HasValue
+                ? TimeZoneInfo.ConvertTimeFromUtc(Model.SignatureUploadedAt.Value, istZone)
+                : (DateTime?)null;
+            }
+
+            <div class="signature-row">
+                <div class="video-card @(Model.IsSignatureUploaded ? "resource-completed" : "resource-pending")">
+
+                    <div class="video-icon">✍️</div>
+
+                    <h3>
+                        Digital Signature
+                        @if (!Model.IsSignatureUploaded)
+                        {
+                            <span class="pending-badge">Pending</span>
+                        }
+                        else
+                        {
+                            <span class="completed-badge">Completed</span>
+                        }
+                    </h3>
+
+                    <p>
+                        @if (!Model.IsSignatureUploaded)
+                        {
+                            <span>Please upload your digital signature.</span>
+                        }
+                        else
+                        {
+                            <span>
+                                Uploaded on @signatureIST?.ToString("dd MMM yyyy, hh:mm tt")
+                            </span>
+                        }
+                    </p>
+
+                    <button class="video-btn"
+                            onclick="openSignatureModal()"
+                            @(Model.IsSignatureUploaded ? "disabled style='opacity:0.6;cursor:not-allowed;'" : "")>
+                        Upload Signature
+                    </button>
+
+                </div>
+            </div>
+
+        </div>
+        </section>
 
 
 
@@ -884,7 +859,8 @@
     
 
 
-    <script src="~/js/site.js?v=@DateTime.Now.Ticks"></script>
+    <script src="@Url.Content("~/js/site.js")?v=@DateTime.Now.Ticks"></script>
+
 
 
     <!-- Resource Modal -->

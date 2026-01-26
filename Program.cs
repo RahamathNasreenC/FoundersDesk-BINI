@@ -37,7 +37,9 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
     DbSeeder.SeedCourses(context);
-    DbSeeder.SeedTrainingResources(context);// ✅ new seeder
+    DbSeeder.SeedTrainingResources(context);
+    DbSeeder.SeedDocuments(context);
+
 }
 
 // Configure the HTTP request pipeline

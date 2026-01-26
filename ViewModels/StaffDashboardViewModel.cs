@@ -9,12 +9,14 @@ namespace FoundersDesk.ViewModels
         public UserDto User { get; set; }
         public List<CourseViewModel> Courses { get; set; }
 
+        // ===== Company Policies =====
+        public CompanyPolicyViewModel CompanyPolicies { get; set; }
 
-        // ===== Resources & Signature =====
-        public List<string> AcknowledgedResources { get; set; } = new List<string>();
-        public bool IsSignatureUploaded { get; set; }
-        public DateTime? SignatureUploadedAt { get; set; }
+        // ===== Welcome Kit =====
         public List<TrainingResourceViewModel> TrainingResources { get; set; }
 
+        // ===== Signature =====
+        public bool IsSignatureUploaded { get; set; }
+        public DateTime? SignatureUploadedAt { get; set; }
     }
 }

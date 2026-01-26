@@ -102,34 +102,34 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-let selectedResource = '';
-let hasScrolledToBottom = false;
+let selectedDocumentId = 0;
+function openResource(id, title, path) {
+    selectedDocumentId = id;
 
-function openResource(type) {
-    selectedResource = type;
-    hasScrolledToBottom = false;
+    // Set title
+    document.getElementById("resourceTitle").innerText = title;
 
-    const docs = {
-        terms: '/docs/terms.pdf',
-        privacy: '/docs/privacy.pdf',
-        conduct: '/docs/conduct.pdf'
-    };
+    // Set iframe source (PDF or file)
+    document.getElementById("resourceFrame").src = path;
 
-    const frame = document.getElementById('resourceFrame');
-    frame.src = docs[type];
+    // Reset checkbox
+    document.getElementById("ackCheckbox").checked = false;
 
-    const checkbox = document.getElementById('ackCheckbox');
-    checkbox.checked = false;
-    checkbox.disabled = false;
-
-    document.getElementById('resourceModal').style.display = 'flex';
-    document.getElementById('resourceFrame').src = docs[type];
-    document.getElementById('resourceModal').style.display = 'flex';
-
-
-    // Wait for iframe to load
-
+    // Show modal
+    document.getElementById("resourceModal").style.display = "flex";
 }
+
+
+function openResourceFromBtn(btn) {
+    openResource(
+        btn.dataset.id,
+        btn.dataset.title,
+        btn.dataset.path
+    );
+}
+
+
+
 function closeResourceModal() {
     document.getElementById('resourceModal').style.display = 'none';
 }
@@ -145,7 +145,7 @@ function submitAcknowledgement() {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: 'resourceType=' + encodeURIComponent(selectedResource)
+        body: 'documentId=' + encodeURIComponent(selectedDocumentId)
     })
         .then(res => res.json())
         .then(data => {
@@ -153,15 +153,15 @@ function submitAcknowledgement() {
                 alert("Saved successfully!");
                 closeResourceModal();
                 location.reload();
-
             } else {
-                alert(data.message);
+                alert(data.message || "Failed");
             }
         })
         .catch(err => {
             alert("Server error: " + err);
         });
 }
+
 // ===============================
 // DIGITAL SIGNATURE FUNCTIONS
 // ===============================
@@ -186,7 +186,7 @@ function submitSignature() {
     const formData = new FormData();
     formData.append("signature", fileInput.files[0]);
 
-    fetch("/Intern/UploadSignature", {
+    fetch("/Staff/UploadSignature", {
         method: "POST",
         body: formData
     })

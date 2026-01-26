@@ -53,24 +53,30 @@ namespace FoundersDesk.Controllers
                 return RedirectToAction("Login", "Auth", new { role = "intern" });
             }
             // Get already acknowledged resources for this user
-            var documents = _context.Documents.ToList();
+            // ========== NEW DOCUMENT ACK LOGIC ==========
 
-            var acknowledgements = _context.ResourceAcknowledgements
-                .Where(r => r.Username == user.Username)
+            var documents = _context.Documents
+                .Where(d => d.RoleType == user.Role.ToString() && d.IsActive)
                 .ToList();
 
-            var validAcknowledgements = acknowledgements
+            var acknowledgements = _context.ResourceAcknowledgements
+                .Where(a => a.Username == user.Username)
+                .ToList();
+
+            // Only acknowledgements that are still valid (not outdated)
+            var validAcknowledgedDocIds = acknowledgements
                 .Join(documents,
-                    ack => ack.ResourceType,
-                    doc => doc.DocumentType,
+                    ack => ack.DocumentId,
+                    doc => doc.DocumentId,
                     (ack, doc) => new
                     {
-                        ack.ResourceType,
+                        doc.DocumentType,
                         IsValid = ack.AcknowledgedAt >= doc.UpdatedAt
                     })
                 .Where(x => x.IsValid)
-                .Select(x => x.ResourceType)
+                .Select(x => x.DocumentType)
                 .ToList();
+
 
             // Get digital signature status
             var signature = _context.DigitalSignatures
@@ -99,7 +105,7 @@ namespace FoundersDesk.Controllers
                     IsProfileCompleted = user.IsProfileCompleted,
                     Role = user.Role.ToString()
                 },
-                AcknowledgedResources = validAcknowledgements,
+                AcknowledgedResources = validAcknowledgedDocIds,
 
                 IsSignatureUploaded = signature != null,
                 SignatureUploadedAt = signature?.UploadedAt,

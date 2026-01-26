@@ -9,10 +9,21 @@ namespace FoundersDesk.Models
         public int DocumentId { get; set; }
 
         [Required]
-        public string DocumentType { get; set; }
-        // values: "terms", "privacy", "conduct"
+        public string Title { get; set; }        // "Company Policy", "NDA", etc
 
-        public DateTime UpdatedAt { get; set; }
-        // when the document content was last changed
+        [Required]
+        public string DocumentType { get; set; } // unique key: "company-policy", "nda"
+
+        [Required]
+        public string FilePath { get; set; }     // "/docs/staff/company-policy.pdf"
+
+        [Required]
+        public string RoleType { get; set; }     // "Staff" / "Intern"
+
+        public bool RequiresSignature { get; set; }  // Staff=true, Intern=false
+
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        public bool IsActive { get; set; } = true;
     }
 }

@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
+using System.Threading.Tasks;
 
 
 namespace FoundersDesk.Controllers
@@ -56,26 +58,36 @@ namespace FoundersDesk.Controllers
             // ========== RESOURCES LOGIC (same as Intern) ==========
 
             // Get documents
-            var documents = _context.Documents.ToList();
+            // ========== NEW DOCUMENT ACK LOGIC ==========
 
-            // Get acknowledgements
-            var acknowledgements = _context.ResourceAcknowledgements
-                .Where(r => r.Username == user.Username)
+            var documents = _context.Documents
+                .Where(d => d.RoleType == user.Role.ToString() && d.IsActive)
                 .ToList();
 
-            // Check which are still valid (not outdated)
-            var validAcknowledgements = acknowledgements
-                .Join(documents,
-                    ack => ack.ResourceType,
-                    doc => doc.DocumentType,
-                    (ack, doc) => new
-                    {
-                        ack.ResourceType,
-                        IsValid = ack.AcknowledgedAt >= doc.UpdatedAt
-                    })
-                .Where(x => x.IsValid)
-                .Select(x => x.ResourceType)
-                .ToList();
+            var policyItems = documents.Select(doc =>
+            {
+                var ack = _context.ResourceAcknowledgements
+                    .FirstOrDefault(a =>
+                        a.Username == user.Username &&
+                        a.DocumentId == doc.DocumentId);
+
+                return new PolicyDocumentItem
+                {
+                    DocumentId = doc.DocumentId,
+                    Title = doc.Title,
+                    FilePath = doc.FilePath,
+                    RequiresSignature = doc.RequiresSignature,
+                    IsAcknowledged = ack != null && ack.AcknowledgedAt >= doc.UpdatedAt,
+                    AcknowledgedAt = ack?.AcknowledgedAt
+                };
+            }).ToList();
+
+            var companyPolicies = new CompanyPolicyViewModel
+            {
+                Documents = policyItems
+            };
+
+
 
             // Get digital signature
             var signature = _context.DigitalSignatures
@@ -131,7 +143,8 @@ namespace FoundersDesk.Controllers
                     Role = user.Role.ToString()
                 },
 
-                AcknowledgedResources = validAcknowledgements,
+                CompanyPolicies = companyPolicies,
+
                 IsSignatureUploaded = signature != null,
                 SignatureUploadedAt = signature?.UploadedAt,
 
@@ -169,5 +182,63 @@ namespace FoundersDesk.Controllers
 
 
         }
+        [HttpPost]
+        public async Task<IActionResult> UploadSignature(IFormFile signature)
+        {
+            try
+            {
+                var username = HttpContext.Session.GetString("Username");
+
+                if (string.IsNullOrEmpty(username))
+                    return Json(new { success = false, message = "Session expired" });
+
+                if (signature == null || signature.Length == 0)
+                    return Json(new { success = false, message = "No file uploaded" });
+
+                // Create folder if not exists
+                var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "signatures");
+                if (!Directory.Exists(uploadFolder))
+                    Directory.CreateDirectory(uploadFolder);
+
+                // Save file
+                var fileName = username + "_" + Guid.NewGuid() + Path.GetExtension(signature.FileName);
+                var filePath = Path.Combine(uploadFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await signature.CopyToAsync(stream);
+                }
+
+                var dbPath = "/uploads/signatures/" + fileName;
+
+                // Check if signature already exists
+                var existing = _context.DigitalSignatures.FirstOrDefault(s => s.Username == username);
+
+                if (existing == null)
+                {
+                    var sig = new DigitalSignature
+                    {
+                        Username = username,
+                        FilePath = dbPath,
+                        UploadedAt = DateTime.UtcNow
+                    };
+                    _context.DigitalSignatures.Add(sig);
+                }
+                else
+                {
+                    existing.FilePath = dbPath;
+                    existing.UploadedAt = DateTime.UtcNow;
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
     }
 }

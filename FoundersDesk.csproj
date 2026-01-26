@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\docs\staff\company-policy.pdf\**" />
+    <Content Remove="wwwroot\docs\staff\company-policy.pdf\**" />
+    <EmbeddedResource Remove="wwwroot\docs\staff\company-policy.pdf\**" />
+    <None Remove="wwwroot\docs\staff\company-policy.pdf\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.10" />
@@ -18,7 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\docs\" />
+    <Folder Include="wwwroot\docs\intern\" />
+    <Folder Include="wwwroot\docs\staff\" />
+    <Folder Include="wwwroot\images\training\" />
     <Folder Include="wwwroot\uploads\training-resources\" />
     <Folder Include="wwwroot\videos\common\" />
     <Folder Include="wwwroot\videos\frontend\" />

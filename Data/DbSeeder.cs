@@ -253,6 +253,46 @@ namespace FoundersDesk.Data
             context.TrainingResources.AddRange(resources);
             context.SaveChanges();
         }
+        public static void SeedDocuments(ApplicationDbContext context)
+        {
+            if (context.Documents.Any()) return;
+
+            var docs = new List<Document>
+    {
+        // =========================
+        // STAFF DOCUMENTS
+        // =========================
+        new Document {
+            Title = "Company Policy",
+            DocumentType = "company-policy",
+            FilePath = "/docs/staff/company-policy.pdf",
+            RoleType = "Staff",
+            RequiresSignature = true
+        },
+        new Document {
+            Title = "Code of Conduct",
+            DocumentType = "code-of-conduct",
+            FilePath = "/docs/staff/code-of-conduct.pdf",
+            RoleType = "Staff",
+            RequiresSignature = true
+        },
+
+        // =========================
+        // INTERN DOCUMENTS
+        // =========================
+        new Document {
+            Title = "Intern Policy",
+            DocumentType = "intern-policy",
+            FilePath = "/docs/intern/intern-policy.pdf",
+            RoleType = "Intern",
+            RequiresSignature = false
+        }
+    };
+
+            context.Documents.AddRange(docs);
+            context.SaveChanges();
+        }
+
 
 
 

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 
+
+
 namespace FoundersDesk.Controllers
 {
     public class ResourceController : Controller
@@ -16,8 +18,9 @@ namespace FoundersDesk.Controllers
             _context = context;
         }
 
+      
         [HttpPost]
-        public IActionResult Acknowledge(string resourceType)
+        public IActionResult Acknowledge(int documentId)
         {
             try
             {
@@ -26,17 +29,13 @@ namespace FoundersDesk.Controllers
                 if (string.IsNullOrEmpty(username))
                     return Json(new { success = false, message = "Session expired." });
 
-                if (string.IsNullOrEmpty(resourceType))
-                    return Json(new { success = false, message = "Invalid resource." });
-
-                var document = _context.Documents
-                    .FirstOrDefault(d => d.DocumentType == resourceType);
+                var document = _context.Documents.Find(documentId);
 
                 if (document == null)
                     return Json(new { success = false, message = "Document not found." });
 
                 var acknowledgement = _context.ResourceAcknowledgements
-                    .FirstOrDefault(r => r.Username == username && r.ResourceType == resourceType);
+                    .FirstOrDefault(r => r.Username == username && r.DocumentId == documentId);
 
                 // First time acknowledgement
                 if (acknowledgement == null)
@@ -44,9 +43,8 @@ namespace FoundersDesk.Controllers
                     acknowledgement = new ResourceAcknowledgement
                     {
                         Username = username,
-                        ResourceType = resourceType,
-                        AcknowledgedAt = DateTime.UtcNow,
-                        UserId = 0
+                        DocumentId = documentId,
+                        AcknowledgedAt = DateTime.UtcNow
                     };
 
                     _context.ResourceAcknowledgements.Add(acknowledgement);
@@ -69,5 +67,6 @@ namespace FoundersDesk.Controllers
                 return Content("SERVER ERROR: " + ex.Message);
             }
         }
+
     }
 }
