@@ -1,30 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using FoundersDesk.Data;
-using Microsoft.EntityFrameworkCore;
+using FoundersDesk.Interfaces;
 
 namespace FoundersDesk.Controllers
 {
     public class LearningController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICourseRepository _courseRepository;
 
-        public LearningController(ApplicationDbContext context)
+        public LearningController(ICourseRepository courseRepository)
         {
-            _context = context;
+            _courseRepository = courseRepository;
         }
 
         public async Task<IActionResult> Course(int id)
         {
-            var course = await _context.Courses
-                .Include(c => c.Modules)
-                    .ThenInclude(m => m.Videos)
-                .FirstOrDefaultAsync(c => c.CourseId == id);   // ✅ FIX
+            var course = await _courseRepository.GetCourseWithModulesAsync(id);
 
             if (course == null)
                 return NotFound();
 
             return View(course);
         }
-
     }
 }

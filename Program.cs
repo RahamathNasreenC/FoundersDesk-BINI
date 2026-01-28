@@ -1,6 +1,7 @@
 ﻿using FoundersDesk.Data;
 using FoundersDesk.Interfaces;
 using FoundersDesk.Repositories;
+using FoundersDesk.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IVideoRepository, VideoRepository>();
+
+builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
+builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<ITrainingResourceRepository, TrainingResourceRepository>();
+builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+
+
+
 
 var app = builder.Build();
 

@@ -1,35 +1,36 @@
-﻿using FoundersDesk.Data;
+﻿using FoundersDesk.Interfaces;
 using FoundersDesk.ViewModels;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace FoundersDesk.Controllers
 {
     public class ProfileController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IProfileRepository _profileRepository;
 
-        public ProfileController(ApplicationDbContext db)
+        public ProfileController(IProfileRepository profileRepository)
         {
-            _db = db;
+            _profileRepository = profileRepository;
         }
 
         [HttpGet]
-        public IActionResult Complete()
+        public async Task<IActionResult> Complete()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null) return RedirectToAction("Login", "Auth");
+            if (userId == null)
+                return RedirectToAction("Login", "Auth");
 
-            var user = _db.Users.Find(userId.Value);
+            var user = await _profileRepository.GetUserByIdAsync(userId.Value);
+            if (user == null)
+                return RedirectToAction("Login", "Auth");
 
             var vm = new CompleteProfileViewModel
             {
                 Email = user.Email,
-                FullName = user.FullName, // Pre-fill if they are editing
+                FullName = user.FullName,
                 PhoneNumber = user.PhoneNumber
-
             };
 
             return View(vm);
@@ -40,33 +41,28 @@ namespace FoundersDesk.Controllers
         public async Task<IActionResult> Complete(CompleteProfileViewModel model)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null) return RedirectToAction("Login", "Auth");
+            if (userId == null)
+                return RedirectToAction("Login", "Auth");
 
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = _db.Users.Find(userId.Value);
+            var user = await _profileRepository.GetUserByIdAsync(userId.Value);
+            if (user == null)
+                return RedirectToAction("Login", "Auth");
 
-            // Update basic info
+            // Update profile
             user.FullName = model.FullName;
             user.PhoneNumber = model.PhoneNumber;
             user.Email = model.Email;
-            
-
-
-            // ✅ STANDARD AVATAR LOGIC
-            // Instead of local files, we use a reliable API that generates a circle avatar based on their name.
-            // This ensures every user has a clean, properly placed image immediately.
-
-
             user.IsProfileCompleted = true;
-            await _db.SaveChangesAsync();
 
-            // Redirect based on role
-            if (user.Role == Models.UserRole.Staff)
-                return RedirectToAction("Dashboard", "Staff");
-            else
-                return RedirectToAction("Dashboard", "Intern");
+            await _profileRepository.UpdateProfileAsync(user);
+
+            // Redirect by role
+            return user.Role == Models.UserRole.Staff
+                ? RedirectToAction("Dashboard", "Staff")
+                : RedirectToAction("Dashboard", "Intern");
         }
     }
 }

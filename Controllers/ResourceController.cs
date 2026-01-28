@@ -1,24 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using FoundersDesk.Data;
+using FoundersDesk.Interfaces;
 using FoundersDesk.Models;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Linq;
-
-
 
 namespace FoundersDesk.Controllers
 {
     public class ResourceController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IResourceRepository _resourceRepository;
 
-        public ResourceController(ApplicationDbContext context)
+        public ResourceController(IResourceRepository resourceRepository)
         {
-            _context = context;
+            _resourceRepository = resourceRepository;
         }
 
-      
         [HttpPost]
         public IActionResult Acknowledge(int documentId)
         {
@@ -29,15 +25,14 @@ namespace FoundersDesk.Controllers
                 if (string.IsNullOrEmpty(username))
                     return Json(new { success = false, message = "Session expired." });
 
-                var document = _context.Documents.Find(documentId);
+                var document = _resourceRepository.GetDocumentById(documentId);
 
                 if (document == null)
                     return Json(new { success = false, message = "Document not found." });
 
-                var acknowledgement = _context.ResourceAcknowledgements
-                    .FirstOrDefault(r => r.Username == username && r.DocumentId == documentId);
+                var acknowledgement =
+                    _resourceRepository.GetAcknowledgement(username, documentId);
 
-                // First time acknowledgement
                 if (acknowledgement == null)
                 {
                     acknowledgement = new ResourceAcknowledgement
@@ -47,19 +42,19 @@ namespace FoundersDesk.Controllers
                         AcknowledgedAt = DateTime.UtcNow
                     };
 
-                    _context.ResourceAcknowledgements.Add(acknowledgement);
+                    _resourceRepository.AddAcknowledgement(acknowledgement);
                 }
-                // Re-acknowledgement after document update
                 else if (acknowledgement.AcknowledgedAt < document.UpdatedAt)
                 {
                     acknowledgement.AcknowledgedAt = DateTime.UtcNow;
+                    _resourceRepository.UpdateAcknowledgement(acknowledgement);
                 }
                 else
                 {
                     return Json(new { success = false, message = "Already acknowledged." });
                 }
 
-                _context.SaveChanges();
+                _resourceRepository.Save();
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -67,6 +62,5 @@ namespace FoundersDesk.Controllers
                 return Content("SERVER ERROR: " + ex.Message);
             }
         }
-
     }
 }

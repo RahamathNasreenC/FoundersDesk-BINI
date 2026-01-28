@@ -1,17 +1,16 @@
-﻿using FoundersDesk.Data;
+﻿using FoundersDesk.Repositories.Interfaces;
 using FoundersDesk.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace FoundersDesk.Controllers
 {
     public class TrainingController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ITrainingResourceRepository _trainingRepo;
 
-        public TrainingController(ApplicationDbContext context)
+        public TrainingController(ITrainingResourceRepository trainingRepo)
         {
-            _context = context;
+            _trainingRepo = trainingRepo;
         }
 
         public IActionResult Index(string pageKey)
@@ -19,11 +18,7 @@ namespace FoundersDesk.Controllers
             if (string.IsNullOrWhiteSpace(pageKey))
                 return NotFound();
 
-            var resources = _context.TrainingResources
-                .Where(r => r.IsActive)
-                .OrderBy(r => r.DisplayOrder)
-                .ToList();
-
+            var resources = _trainingRepo.GetActiveResources();
             var currentIndex = resources.FindIndex(r => r.PageKey == pageKey);
 
             if (currentIndex == -1)
